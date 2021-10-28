@@ -35,6 +35,13 @@ pipex = 800
 pipex2 = 1200
 pipex3 = 1600
 
+
+with open("birdscores.txt") as file:
+    pastscores = file.readlines()
+highscore = max(pastscores)
+
+scores = open("birdscores.txt","a")
+
 myfont = pygame.font.SysFont('candara', 45) 
 textsurface = myfont.render("GAME OVER   [press space to quit]", False, (0,0,0))
 scoretext = myfont.render("score ", False, (0,0,0))
@@ -116,8 +123,8 @@ while run:
     
 
     # print score
-    scoretext = myfont.render(str(score), False, (0,0,0))
-    win.blit(scoretext, (20,20))
+    '''scoretext = myfont.render(str(score), False, (0,0,0))
+    win.blit(scoretext, (20,20))'''
     
     win.blit(pipe, [pipex, pipeheight])                         #drawing pipes
     win.blit(toppipe, [pipex, toppipeheight])
@@ -125,7 +132,10 @@ while run:
     win.blit(toppipe, [pipex2, toppipeheight2])
     win.blit(pipe, [pipex3, pipeheight3])
     win.blit(toppipe, [pipex3, toppipeheight3])
-    pygame.display.set_caption(str(score)) 
+    if int(highscore) < int(score):
+        highscore = score
+    topbarstr = "High score: " + str(highscore) + "  Current score: " + str(score)
+    pygame.display.set_caption(topbarstr) 
     
     if pipex < -86:         (pipeheight,    toppipeheight,   pipex   ) = pipey()    # generating new pipes
     elif pipex2 < -86:  (pipeheight2,  toppipeheight2, pipex2 ) = pipey()
@@ -146,5 +156,10 @@ while run:
     
     
     pygame.display.update() #draw the screen with whatever changes you've made above
+
+scores.write("\n")
+scores.write(str(score))
+scores.write("\n")
+scores.close()
 
 pygame.quit()
